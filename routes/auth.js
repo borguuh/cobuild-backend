@@ -6,19 +6,16 @@ const router = express.Router();
 //import { requireSignin } from "../middlewares";
 
 // controllers
-// import {
-//  register,
+import {
+ register,
 //   login,
 //   logout,
 //   currentUser,
 //   forgotPassword,
 //   resetPassword,
-// } from "../controllers/auth";
+} from "../controllers/auth";
 
-router.get("/register", (req, res) => {
-    console.log("register route")
-    res.send("ok")
-});
+router.post("/register", register);
 // router.post("/login", login);
 // router.get("/logout", logout);
 //router.get("/current-user", requireSignin, currentUser);
