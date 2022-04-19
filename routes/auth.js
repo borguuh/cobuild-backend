@@ -9,7 +9,7 @@ const router = express.Router();
 import {
   register,
   login,
-  //   logout,
+  logout,
   //   currentUser,
   //   forgotPassword,
   //   resetPassword,
@@ -17,7 +17,7 @@ import {
 
 router.post("/register", register);
 router.post("/login", login);
-// router.get("/logout", logout);
+router.get("/logout", logout);
 //router.get("/current-user", requireSignin, currentUser);
 // router.post("/forgot-password", forgotPassword);
 // router.post("/reset-password", resetPassword);
