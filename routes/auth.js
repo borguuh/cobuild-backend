@@ -7,16 +7,16 @@ const router = express.Router();
 
 // controllers
 import {
- register,
-//   login,
-//   logout,
-//   currentUser,
-//   forgotPassword,
-//   resetPassword,
+  register,
+  login,
+  //   logout,
+  //   currentUser,
+  //   forgotPassword,
+  //   resetPassword,
 } from "../controllers/auth";
 
 router.post("/register", register);
-// router.post("/login", login);
+router.post("/login", login);
 // router.get("/logout", logout);
 //router.get("/current-user", requireSignin, currentUser);
 // router.post("/forgot-password", forgotPassword);
