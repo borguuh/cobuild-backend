@@ -1,7 +1,18 @@
 import jwt from "jsonwebtoken";
+import AWS from "aws-sdk";
+import { nanoid } from "nanoid";
 
 import User from "../models/user";
 import { hashPassword, comparePassword } from "../utils/auth";
+
+const awsConfig = {
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+  apiVersion: process.env.AWS_API_VERSION,
+};
+
+const SES = new AWS.SES(awsConfig);
 
 export const register = async (req, res) => {
   try {
@@ -90,10 +101,63 @@ export const logout = async (req, res) => {
 export const currentUser = async (req, res) => {
   try {
     //find user with id from verified token
-    //send user to client, exclude password
+    //log user, exclude password
     const user = await User.findById(req.user._id).select("-password").exec();
     console.log("CURRENT_USER", user);
     return res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    // console.log(email);
+    const shortCode = nanoid(6).toUpperCase();
+    const user = await User.findOneAndUpdate(
+      { email },
+      { passwordResetCode: shortCode }
+    );
+    if (!user) return res.status(400).send("User not found");
+
+    // email parameters and content
+    const params = {
+      Source: process.env.EMAIL_FROM,
+      Destination: {
+        ToAddresses: [email],
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: "UTF-8",
+            Data: `
+                <html>
+                  <h1>Reset password</h1>
+                  <p>Please, use this code to reset your password</p>
+                  <h2 style="color:red;">${shortCode}</h2>
+                  <p> Kindly ignore if you didn't request password reset</p>
+                  <i>Cobuild &copy 2022</i>
+                </html>
+              `,
+          },
+        },
+        Subject: {
+          Charset: "UTF-8",
+          Data: "Reset Password",
+        },
+      },
+    };
+
+    const emailSent = SES.sendEmail(params).promise();
+    emailSent
+      .then((data) => {
+        console.log(data);
+        res.json({ ok: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } catch (err) {
     console.log(err);
   }
