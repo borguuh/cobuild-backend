@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { readdirSync } from "fs";
+import cookieParser from "cookie-parser";
 const morgan = require("morgan");
 require("dotenv").config();
 
@@ -20,6 +21,7 @@ mongoose
 // apply middlewares
 app.use(cors());
 app.use(express.json({ limit: "5mb" }));
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 // route

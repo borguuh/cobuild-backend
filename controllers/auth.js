@@ -86,3 +86,15 @@ export const logout = async (req, res) => {
     console.log(err);
   }
 };
+
+export const currentUser = async (req, res) => {
+  try {
+    //find user with id from verified token
+    //send user to client, exclude password
+    const user = await User.findById(req.user._id).select("-password").exec();
+    console.log("CURRENT_USER", user);
+    return res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+  }
+};
