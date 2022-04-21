@@ -10,7 +10,7 @@ import {
   register,
   login,
   logout,
-  currentUser,
+  // currentUser,
   forgotPassword,
   resetPassword,
 } from "../controllers/auth";
@@ -18,7 +18,7 @@ import {
 router.post("/register", register);
 router.post("/login", login);
 router.get("/logout", logout);
-router.get("/current-user", requireSignin, currentUser);
+// router.get("/current-user", requireSignin, currentUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
