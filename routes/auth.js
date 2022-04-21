@@ -12,7 +12,7 @@ import {
   logout,
   currentUser,
   forgotPassword,
-  //   resetPassword,
+  resetPassword,
 } from "../controllers/auth";
 
 router.post("/register", register);
@@ -20,6 +20,6 @@ router.post("/login", login);
 router.get("/logout", logout);
 router.get("/current-user", requireSignin, currentUser);
 router.post("/forgot-password", forgotPassword);
-// router.post("/reset-password", resetPassword);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;
