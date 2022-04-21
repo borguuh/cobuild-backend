@@ -6,8 +6,9 @@ const router = express.Router();
 import { requireSignin } from "../middlewares";
 
 // controllers
-import { currentUser } from "../controllers/user";
+import { currentUser, userProjects } from "../controllers/user";
 
 router.get("/current-user", requireSignin, currentUser);
+router.get("/user-projects", requireSignin, userProjects);
 
 module.exports = router;

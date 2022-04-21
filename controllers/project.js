@@ -84,13 +84,13 @@ export const create = async (req, res) => {
 
     const course = await new Project({
       slug: slugify(req.body.name),
-      instructor: req.user._id,
+      creator: req.user._id,
       ...req.body,
     }).save();
 
     res.json(course);
   } catch (err) {
     console.log(err);
-    return res.status(400).send("Course create failed. Try again.");
+    return res.status(400).send("Project creation failed. Try again.");
   }
 };
