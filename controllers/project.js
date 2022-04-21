@@ -73,7 +73,7 @@ export const removeImage = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  // console.log("CREATE COURSE", req.body);
+  // console.log("CREATE PROJECT", req.body);
   // return;
   try {
     const alreadyExist = await Project.findOne({
@@ -82,15 +82,26 @@ export const create = async (req, res) => {
     if (alreadyExist)
       return res.status(400).send("Project title is taken already");
 
-    const course = await new Project({
+    const project = await new Project({
       slug: slugify(req.body.name),
       creator: req.user._id,
       ...req.body,
     }).save();
 
-    res.json(course);
+    res.json(project);
   } catch (err) {
     console.log(err);
     return res.status(400).send("Project creation failed. Try again.");
+  }
+};
+
+export const read = async (req, res) => {
+  try {
+    const project = await Project.findOne({ slug: req.params.slug })
+      .populate("creator", "_id name")
+      .exec();
+    res.json(project);
+  } catch (err) {
+    console.log(err);
   }
 };
