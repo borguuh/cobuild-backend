@@ -98,9 +98,20 @@ export const create = async (req, res) => {
 
 export const read = async (req, res) => {
   try {
+    // increase views
+    const current = await Project.findOne({ slug: req.params.slug });
+    const count = current.views;
+    await Project.findOneAndUpdate(
+      { slug: req.params.slug },
+      {
+        views: count + 1,
+      }
+    ).exec();
+
     const project = await Project.findOne({ slug: req.params.slug })
       .populate("creator", "_id name title")
       .exec();
+
     res.json(project);
   } catch (err) {
     console.log(err);
