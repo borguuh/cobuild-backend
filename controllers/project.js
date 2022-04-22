@@ -99,7 +99,7 @@ export const create = async (req, res) => {
 export const read = async (req, res) => {
   try {
     const project = await Project.findOne({ slug: req.params.slug })
-      .populate("creator", "_id name")
+      .populate("creator", "_id name title")
       .exec();
     res.json(project);
   } catch (err) {
@@ -172,6 +172,8 @@ export const unbookmark = async (req, res) => {
 
 export const userProjects = async (req, res) => {
   const user = await User.findById(req.user._id).exec();
-  const projects = await Project.find({ _id: { $in: user.projects } }).exec();
+  const projects = await Project.find({ _id: { $in: user.projects } })
+    .populate("creator", "_id name title")
+    .exec();
   res.json(projects);
 };
