@@ -2,6 +2,7 @@ import AWS from "aws-sdk";
 import { nanoid } from "nanoid";
 import slugify from "slugify";
 import Project from "../models/project";
+import User from "../models/user";
 
 const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -116,5 +117,26 @@ export const projects = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send("Getting all projects failed");
+  }
+};
+
+export const bookmark = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId).exec();
+    const result = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $addToSet: { projects: project._id },
+      },
+      { new: true }
+    ).exec();
+    console.log(result);
+    res.json({
+      message: "successfully bookmarked",
+      project,
+    });
+  } catch (err) {
+    console.log("bookmark error", err);
+    return res.status(400).send("bookmark failed");
   }
 };

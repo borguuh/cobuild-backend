@@ -12,6 +12,7 @@ import {
   create,
   read,
   projects,
+  bookmark,
 } from "../controllers/project";
 
 router.get("/projects", projects);
@@ -21,5 +22,7 @@ router.post("/project/remove-image", removeImage);
 // project
 router.post("/project", requireSignin, create);
 router.get("/project/:slug", read); //read specific project
+// bookmark
+router.post("/bookmark/:id", requireSignin, bookmark);
 
 module.exports = router;
