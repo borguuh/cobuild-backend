@@ -105,3 +105,16 @@ export const read = async (req, res) => {
     console.log(err);
   }
 };
+
+export const projects = async (req, res) => {
+  try {
+    const all = await Project.find()
+      .populate("creator", "_id name")
+      .sort({ createdAt: -1 })
+      .exec();
+    res.json(all);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Getting all projects failed");
+  }
+};
