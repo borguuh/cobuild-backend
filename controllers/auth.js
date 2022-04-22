@@ -137,7 +137,7 @@ export const forgotPassword = async (req, res) => {
                   <p>Please, use this code to reset your password</p>
                   <h2 style="color:red;">${shortCode}</h2>
                   <p> Kindly ignore if you didn't request password reset</p>
-                  <i>Cobuild &copy 2022</i>
+                  <i>Cobuild ©2022</i>
                 </html>
               `,
           },

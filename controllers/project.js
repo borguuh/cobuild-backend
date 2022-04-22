@@ -120,8 +120,8 @@ export const read = async (req, res) => {
 
 export const projects = async (req, res) => {
   try {
-    const all = await Project.find()
-      .populate("creator", "_id name")
+    const all = await Project.find({})
+      .populate("creator", "_id name title")
       .sort({ createdAt: -1 })
       .exec();
     res.json(all);
