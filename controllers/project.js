@@ -169,3 +169,9 @@ export const unbookmark = async (req, res) => {
     return res.status(400).send("bookmark removal failed");
   }
 };
+
+export const userProjects = async (req, res) => {
+  const user = await User.findById(req.user._id).exec();
+  const projects = await Project.find({ _id: { $in: user.projects } }).exec();
+  res.json(projects);
+};
