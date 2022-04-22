@@ -131,6 +131,12 @@ export const bookmark = async (req, res) => {
       { new: true }
     ).exec();
     console.log(result);
+
+    const count = project.bookmarks;
+    await Project.findByIdAndUpdate(req.params.projectId, {
+      bookmarks: count + 1,
+    }).exec();
+
     res.json({
       message: "successfully bookmarked",
       project,
