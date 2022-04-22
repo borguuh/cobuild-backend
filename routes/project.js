@@ -13,6 +13,7 @@ import {
   read,
   projects,
   bookmark,
+  unbookmark,
 } from "../controllers/project";
 
 router.get("/projects", projects);
@@ -24,5 +25,6 @@ router.post("/project", requireSignin, create);
 router.get("/project/:slug", read); //read specific project
 // bookmark
 router.post("/bookmark/:id", requireSignin, bookmark);
+router.post("/unbookmark/:id", requireSignin, unbookmark);
 
 module.exports = router;

@@ -146,3 +146,26 @@ export const bookmark = async (req, res) => {
     return res.status(400).send("bookmark failed");
   }
 };
+
+export const unbookmark = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId).exec();
+    const result = await User.findByIdAndUpdate(req.user._id, {
+      $pull: { bookmarks: { _id: req.params.projectId } },
+    }).exec();
+    console.log(result);
+
+    const count = project.bookmarks;
+    await Project.findByIdAndUpdate(req.params.projectId, {
+      bookmarks: count - 1,
+    }).exec();
+
+    res.json({
+      message: "successfully removed from bookmarks",
+      project,
+    });
+  } catch (err) {
+    console.log("bookmark removal error", err);
+    return res.status(400).send("bookmark removal failed");
+  }
+};
