@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import { nanoid } from "nanoid";
 import slugify from "slugify";
+import project from "../models/project";
 import Project from "../models/project";
 import User from "../models/user";
 
@@ -207,8 +208,49 @@ export const otherUser = async (req, res) => {
 };
 
 export const deleteProject = async (req, res) => {
-  const project = await Project.findOneAndDelete({
+  const { slug } = req.params;
+  const project = await Project.findOne({ slug }).select("creator").exec();
+
+  if (project.creator._id != req.user._id) {
+    return res.status(400).send("Unauthorized");
+  }
+
+  const deletedProject = await Project.findOneAndDelete({
     slug: req.params.slug,
   }).exec();
-  res.send(`Deleted Project ${project}`);
+  res.send(`Deleted Project ${deletedProject}`);
+};
+
+export const update = async (req, res) => {
+  try {
+    // console.log("UPDATE Project", req.body);
+    const { slug } = req.params;
+    const { _id, name, description, preview, github, image, contact } =
+      req.body;
+    const project = await Project.findOne({ slug }).select("creator").exec();
+
+    if (project.creator._id != req.user._id) {
+      return res.status(400).send("Unauthorized");
+    }
+
+    const updated = await Project.updateOne(
+      { "project._id": _id },
+      {
+        $set: {
+          "project.$.name": name,
+          "project.$.description": description,
+          "project.$.preview": preview,
+          "project.$.github": github,
+          "project.$.image": image,
+          "project.$.contact": contact,
+        },
+      },
+      { new: true }
+    ).exec();
+    // console.log("updated", updated);
+    res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Project update failed");
+  }
 };
