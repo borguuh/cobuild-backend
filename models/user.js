@@ -33,10 +33,20 @@ const userSchema = new Schema(
     title: {
       type: String,
     },
+    twitter: {
+      type: String,
+    },
+    github: {
+      type: String,
+    },
+    linkedin: {
+      type: String,
+    },
     picture: {
       type: String,
       default: "/avatar.png",
     },
+    image: {},
     role: {
       type: [String],
       default: ["Member"],

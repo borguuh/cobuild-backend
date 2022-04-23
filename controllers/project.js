@@ -221,36 +221,60 @@ export const deleteProject = async (req, res) => {
   res.send(`Deleted Project ${deletedProject}`);
 };
 
+// export const update = async (req, res) => {
+//   try {
+//     // console.log("UPDATE Project", req.body);
+//     const { slug } = req.params;
+//     const { _id, name, description, preview, github, image, contact } =
+//       req.body;
+//     const project = await Project.findOne({ slug }).select("creator").exec();
+
+// if (project.creator._id != req.user._id) {
+//   return res.status(400).send("Unauthorized");
+// }
+
+//     const updated = await Project.updateOne(
+//       { "project._id": _id },
+//       {
+//         $set: {
+//           "project.$.name": name,
+//           "project.$.description": description,
+//           "project.$.preview": preview,
+//           "project.$.github": github,
+//           "project.$.image": image,
+//           "project.$.contact": contact,
+//         },
+//       },
+//       { new: true }
+//     ).exec();
+//     // console.log("updated", updated);
+//     res.json({ ok: true });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(400).send("Project update failed");
+//   }
+// };
+
 export const update = async (req, res) => {
   try {
-    // console.log("UPDATE Project", req.body);
     const { slug } = req.params;
-    const { _id, name, description, preview, github, image, contact } =
-      req.body;
-    const project = await Project.findOne({ slug }).select("creator").exec();
-
-    if (project.creator._id != req.user._id) {
+    // console.log(slug);
+    const project = await Project.findOne({ slug }).exec();
+    // console.log("Project FOUND => ", project);
+    // if (req.user._id != course.instructor) {
+    //   return res.status(400).send("Unauthorized");
+    // }
+    if (project.creator != req.user._id) {
       return res.status(400).send("Unauthorized");
     }
 
-    const updated = await Project.updateOne(
-      { "project._id": _id },
-      {
-        $set: {
-          "project.$.name": name,
-          "project.$.description": description,
-          "project.$.preview": preview,
-          "project.$.github": github,
-          "project.$.image": image,
-          "project.$.contact": contact,
-        },
-      },
-      { new: true }
-    ).exec();
-    // console.log("updated", updated);
-    res.json({ ok: true });
+    const updated = await Project.findOneAndUpdate({ slug }, req.body, {
+      new: true,
+    }).exec();
+
+    res.json(updated);
   } catch (err) {
     console.log(err);
-    return res.status(400).send("Project update failed");
+    return res.status(400).send(err.message);
   }
 };
