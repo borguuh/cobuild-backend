@@ -122,7 +122,7 @@ export const projects = async (req, res) => {
   try {
     const all = await Project.find({})
       .populate("creator", "_id name title")
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .exec();
     res.json(all);
   } catch (err) {
@@ -144,13 +144,17 @@ export const bookmark = async (req, res) => {
     console.log(result);
 
     const count = project.bookmarks;
-    await Project.findByIdAndUpdate(req.params.projectId, {
-      bookmarks: count + 1,
-    }).exec();
+    const bookmarkedProject = await Project.findByIdAndUpdate(
+      req.params.projectId,
+      {
+        bookmarks: count + 1,
+      },
+      { new: true }
+    ).exec();
 
     res.json({
       message: "successfully bookmarked",
-      project,
+      bookmarkedProject,
     });
   } catch (err) {
     console.log("bookmark error", err);
@@ -167,13 +171,17 @@ export const unbookmark = async (req, res) => {
     console.log(result);
 
     const count = project.bookmarks;
-    await Project.findByIdAndUpdate(req.params.projectId, {
-      bookmarks: count - 1,
-    }).exec();
+    const unbookmarkedProject = await Project.findByIdAndUpdate(
+      req.params.projectId,
+      {
+        bookmarks: count - 1,
+      },
+      { new: true }
+    ).exec();
 
     res.json({
       message: "successfully removed from bookmarks",
-      project,
+      unbookmarkedProject,
     });
   } catch (err) {
     console.log("bookmark removal error", err);
@@ -183,8 +191,17 @@ export const unbookmark = async (req, res) => {
 
 export const userProjects = async (req, res) => {
   const user = await User.findById(req.user._id).exec();
-  const projects = await Project.find({ _id: { $in: user.projects } })
+  const projects = await Project.find({ creator: req.user._id })
     .populate("creator", "_id name title")
+    .sort({ updatedAt: -1 })
+    .exec();
+  res.json(projects);
+};
+
+export const otherUser = async (req, res) => {
+  const projects = await Project.find({ creator: req.params.userId })
+    .populate("creator", "_id name title")
+    .sort({ updatedAt: -1 })
     .exec();
   res.json(projects);
 };

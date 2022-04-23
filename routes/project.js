@@ -15,6 +15,7 @@ import {
   bookmark,
   unbookmark,
   userProjects,
+  otherUser,
 } from "../controllers/project";
 
 router.get("/projects", projects);
@@ -25,8 +26,9 @@ router.post("/project/remove-image", removeImage);
 router.post("/project", requireSignin, create);
 router.get("/project/:slug", read); //read specific project
 router.get("/user-projects", requireSignin, userProjects);
+router.get("/other-user/:userId", otherUser);
 // bookmark
-router.post("/bookmark/:id", requireSignin, bookmark);
-router.post("/unbookmark/:id", requireSignin, unbookmark);
+router.post("/bookmark/:projectId", requireSignin, bookmark);
+router.post("/unbookmark/:projectId", requireSignin, unbookmark);
 
 module.exports = router;
