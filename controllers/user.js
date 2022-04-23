@@ -6,7 +6,7 @@ export const currentUser = async (req, res) => {
     //find user with id from verified token
     //log user, exclude password
     const user = await User.findById(req.user._id)
-      .select("-password -passwordResetCode")
+      .select("-password -passwordResetCode -role -bookmarks -projects")
       .exec();
     console.log("CURRENT_USER", user);
     return res.send(user);

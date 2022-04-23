@@ -72,12 +72,12 @@ export const login = async (req, res) => {
       expiresIn: "7d",
     });
 
-    // exclude hashed password from data to send
-    user.password,
-      user.bookmarks,
-      user.projects,
-      user.role,
-      (user.passwordResetCode = undefined);
+    // exclude unnecessary details from data to send
+    user.password = undefined;
+    user.bookmarks = undefined;
+    user.projects = undefined;
+    user.role = undefined;
+    user.passwordResetCode = undefined;
 
     // send token in cookie to client
     res.cookie("token", token, {
