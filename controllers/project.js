@@ -205,3 +205,10 @@ export const otherUser = async (req, res) => {
     .exec();
   res.json(projects);
 };
+
+export const deleteProject = async (req, res) => {
+  const project = await Project.findOneAndDelete({
+    slug: req.params.slug,
+  }).exec();
+  res.send(`Deleted Project ${project}`);
+};

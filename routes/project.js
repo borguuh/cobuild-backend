@@ -16,6 +16,7 @@ import {
   unbookmark,
   userProjects,
   otherUser,
+  deleteProject,
 } from "../controllers/project";
 
 router.get("/projects", projects);
@@ -27,6 +28,7 @@ router.post("/project", requireSignin, create);
 router.get("/project/:slug", read); //read specific project
 router.get("/user-projects", requireSignin, userProjects);
 router.get("/other-user/:userId", otherUser);
+router.get("/delete-project/:slug", requireSignin, deleteProject); //delete specific project
 // bookmark
 router.post("/bookmark/:projectId", requireSignin, bookmark);
 router.post("/unbookmark/:projectId", requireSignin, unbookmark);
